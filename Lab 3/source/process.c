@@ -27,12 +27,12 @@ void add_process_state(void (*f)(void), int n) {
 	elem = (process_state *) malloc(20);
 	elem->n = n;
 	elem->sp = process_stack_init(f, n);
+	elem->next = NULL;
 
 	//if this is the first element to be created
 	if (*head == NULL) {
-		*head = elem;
-		elem->next = NULL;
-		*tail = elem->next;
+		head = elem;
+		tail = elem->next;
 	}
 	else {
 		/*
@@ -51,10 +51,8 @@ void add_process_state(void (*f)(void), int n) {
 			head->next = elem;
 		}
 		else {
-			//temporarily store the current tail, set its next to the new element, replace the tail
-			struct process_state *tmp;
-			tmp = tail;
-			tmp->next = elem;
+			//set the tail's next to the new element, replace the tail
+			tail->next = elem;
 			tail = elem;
 		}
 	}
@@ -112,6 +110,7 @@ void front_to_back() {
 			head = tail;
 			//store the old head into the tail
 			tail = tmp;
+			tail->next = NULL
 		}
 		//3 or more nodes
 		else {
